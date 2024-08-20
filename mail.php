@@ -1,17 +1,31 @@
 <?php
-// include('amocrm/lead.php');
 
-// $to = "sales@relocant.ae"; // емайл получателя данных из формы
-$tema = "Заявка"; // тема полученного емайла
-$message .= "Номер телефона: ".$_POST['username']."<br>"; //полученное из формы name=phone
-$message .= "Соц.Сеть: ".$_POST['type']."<br>"; //полученное из формы name=phone
-$message .= "Время: ".$_POST['date']."<br>"; //полученное из формы name=phone
-$headers = 'MIME-Version: 1.0' . "\r\n"; // заголовок соответствует формату плюс символ перевода строки
-$headers .= 'Content-type: text/html; charset=utf-8' . "\r\n"; // указывает на тип посылаемого контента
-mail($to, $tema, $message, $headers); //отправляет получателю на емайл значения переменных
-header('Location: /');
-if (isset($_POST['submitform']))
-    
-?>
-<script type="text/javascript">
-</script>   
+	$project_name = 'Edvola Studio'; // Адрес сайта
+	$admin_email  = 'info@edvola.studio'; //Почта домена (если есть)
+	$to_email  = 'zhandarbekova_madina@mail.ru'; // Email для заявок
+	$form_subject = "Новая заявка";
+	foreach ( $_POST as $key => $value ) {
+		if ( $value != "" && $key != "project_name" && $key != "admin_email" && $key != "form_subject" ) {
+			$message .= "
+			" . ( ($c = !$c) ? '<tr>':'<tr style="background-color: #f8f8f8;">' ) . "
+				<td style='padding: 10px; border: #e9e9e9 1px solid;'><b>$key</b></td>
+				<td style='padding: 10px; border: #e9e9e9 1px solid;'>$value</td>
+			</tr>
+			";
+		}
+	}
+
+	$message = "<table style='width: 100%;'>$message</table>";
+		function adopt($text) {
+			return '=?UTF-8?B?'.Base64_encode($text).'?=';
+		}
+	$headers = "MIME-Version: 1.0" . PHP_EOL .
+	"Content-Type: text/html; charset=utf-8" . PHP_EOL .
+	'From: '.adopt($project_name).' <'.$admin_email.'>' . PHP_EOL .
+	'Reply-To: '.$admin_email.'' . PHP_EOL;
+
+	if (mail($to_email, adopt($form_subject), $message, $headers )) {
+		echo "1";
+	}else{
+		echo "0";
+	}
